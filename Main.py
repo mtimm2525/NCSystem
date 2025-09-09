@@ -3,6 +3,8 @@
 
 experts = open("Experts-1.txt", "r")
 profiles = open("Profiles-1.txt", "r")
+next(experts)
+next(profiles)
 
 #creates the dictionary of scholars with nested dictionaries of colleges
 def createDictionaryColleges(experts):
@@ -70,7 +72,10 @@ def searchByField(scholars):
                         for field in studyField:
                             if study in field.lower():
                                 minField.append(name)
+    iscsinField = True
+    isminField = True
     if not csinField:
+        iscsinField = False
         for collegeName, dpt in scholars.items():
             if collegeName.upper() == college:
                 for area, scholarNames in dpt.items():
@@ -79,10 +84,19 @@ def searchByField(scholars):
                             for field in studyField:
                                 for word in study.split():
                                     if word in field.lower():
-                                        csinField.append(name + " (" + field + ")")
-                    if area == "math":
-                        for name, studyField in scholarNames:
-                            for field in studyField:
-                                for word in study.split():
-                                    if word in field.lower():
-                                        minField.append(name + " (" + field + ")")
+                                        csinField.append(name + " (" + field + ")")                
+    if not minField:
+        isminField = False
+        for collegeName, dpt in scholars.items():
+            if area == "math":
+                for name, studyField in scholarNames:
+                    for field in studyField:
+                        for word in study.split():
+                            if word in field.lower():
+                                minField.append(name + " (" + field + ")")
+    return iscsinField, isminField, csinField, minField 
+
+def main():
+    scholars = createDictionaryColleges(experts)
+    scholars = addScholars(experts, profiles, scholars)
+    iscsinField, isminField, csinField, minField = searchByField(scholars)
